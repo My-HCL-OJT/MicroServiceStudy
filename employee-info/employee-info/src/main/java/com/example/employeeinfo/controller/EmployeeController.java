@@ -42,13 +42,13 @@ public class EmployeeController {
 	}
 
 	@GetMapping(path = "/{emp-id}")
-	public ResponseEntity<Object> getEmployeeById(@PathVariable Integer employeeId) {
+	public ResponseEntity<Object> getEmployeeById(@PathVariable("emp-id") Integer employeeId) {
 		logger.info("Calling GET method of employees");
 		Optional<Employee> employee = employeeService.getEmployeeById(employeeId);
 		Employee result = employee.get();
 		
 		// Calling payroll micro-service
-		String url = "http://localhost:8085/payroll/find/" + employeeId;
+		String url = "http://localhost:8081/payroll/" + employeeId;
 		logger.debug("URL" + url);
 		ResponseEntity<EmployeeSalary> employeeSalary = restTemplate.getForEntity(url, EmployeeSalary.class);
 		logger.info("Retrieved Employee salary = ", employeeSalary.getBody());
